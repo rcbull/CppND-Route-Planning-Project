@@ -31,6 +31,7 @@ int main(int argc, const char **argv)
 {    
     std::string osm_data_file = "";
     if( argc > 1 ) {
+        std::cout << argc;
         for( int i = 1; i < argc; ++i )
             if( std::string_view{argv[i]} == "-f" && ++i < argc )
                 osm_data_file = argv[i];
@@ -56,10 +57,24 @@ int main(int argc, const char **argv)
     // user input for these values using std::cin. Pass the user input to the
     // RoutePlanner object below in place of 10, 10, 90, 90.
 
-    float start_x = 10.0;
-    float start_y = 10.0;
-    float end_x = 90.0;
-    float end_y = 90.0;
+    float start_x, start_y, end_x, end_y;
+
+    std::cout << "Input coordinates in range (0,0) and (100, 100)\n";
+  	std::cout << "Insert input start_x\n";
+  	std::cin >> start_x;
+  	std::cout << "Insert input start_y\n";
+  	std::cin >> start_y;
+	std::cout << "Insert input end_x\n";
+  	std::cin >> end_x;
+	std::cout << "Insert input end_y\n";
+  	std::cin >> end_y;
+
+    if (start_x < 0 || start_x > 100 ||
+          end_x < 0 || end_x > 100 ||
+        start_y < 0 || start_y > 100 ||
+          end_y < 0 || end_y > 100) {
+        throw std::runtime_error("!!! INVALID INPUT !!!");
+    };
 
     // Build Model.
     RouteModel model{osm_data};
