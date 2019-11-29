@@ -1,8 +1,10 @@
 #include "route_planner.h"
 #include <algorithm>
+#include <string>
 
 RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, float end_x, float end_y): m_Model(model) {
 
+    std::cout << "RouterPlanner to: " << start_x << " " << start_y << " " << end_x << " " << end_y << "\n";
     start_x *= 0.01;
     start_y *= 0.01;
     end_x *= 0.01;
@@ -35,7 +37,7 @@ float RoutePlanner::CalculateHValue(RouteModel::Node const *node) {
 void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
     current_node->FindNeighbors();
 
-    std::cout << "Total neighbours is" << current_node->neighbors.size() << "";
+    // std::cout << "Total neighbours is" << current_node->neighbors.size() << "";
     for (auto neighbor_node : current_node->neighbors) {
         neighbor_node->parent = current_node;
         neighbor_node->g_value = current_node->g_value + current_node->distance(*neighbor_node);
@@ -76,21 +78,19 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
     // Create path_found vector
     std::vector<RouteModel::Node> path_found;
     RouteModel::Node parent;
-    this->distance = 0.0f; // define distance in start
+    distance = 0.0f; // define distance in start
 
     // TODO: Implement your solution here.
     while (current_node->parent != nullptr) {
         path_found.push_back(*current_node);
-        parent = *(current_node->parent);
-        this->distance += current_node->distance(parent); // increment distance
+        distance += current_node->distance(*(current_node->parent)); // increment distance
         current_node = current_node->parent; // change current node
     }
     path_found.push_back(*current_node);
-    this->distance *= m_Model.MetricScale();
+    distance *= m_Model.MetricScale();
     return path_found;
 
 }
-
 
 // TODO 7: Write the A* Search algorithm here.
 // Tips:

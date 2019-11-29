@@ -31,7 +31,7 @@ int main(int argc, const char **argv)
 {    
     std::string osm_data_file = "";
     if( argc > 1 ) {
-        std::cout << argc;
+        // std::cout << argc;
         for( int i = 1; i < argc; ++i )
             if( std::string_view{argv[i]} == "-f" && ++i < argc )
                 osm_data_file = argv[i];
