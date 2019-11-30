@@ -77,19 +77,19 @@ RouteModel::Node *RoutePlanner::NextNode() {
 std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node *current_node) {
     // Create path_found vector
     std::vector<RouteModel::Node> path_found;
-    RouteModel::Node parent;
     distance = 0.0f; // define distance in start
 
-    // TODO: Implement your solution here.
     while (current_node->parent != nullptr) {
         path_found.push_back(*current_node);
-        distance += current_node->distance(*(current_node->parent)); // increment distance
+        distance += current_node->distance(*current_node->parent); // increment distance
         current_node = current_node->parent; // change current node
     }
     path_found.push_back(*current_node);
+
+    std::reverse(path_found.begin(),path_found.end());
+
     distance *= m_Model.MetricScale();
     return path_found;
-
 }
 
 // TODO 7: Write the A* Search algorithm here.
@@ -100,19 +100,15 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
 // - Store the final path in the m_Model.path attribute before the method exits. This path will then be displayed on the map tile.
 
 void RoutePlanner::AStarSearch() {
-    RouteModel::Node *current_node = nullptr;
-
-    // TODO: Implement your solution here.
+    open_list.emplace_back(start_node);
     start_node->visited = true;
-    open_list.push_back(start_node);
 
     while (open_list.size() > 0) {
-        current_node = NextNode();
+        RouteModel::Node *current_node = NextNode();
         if (current_node->distance(*end_node) == 0) {
-            m_Model.path = ConstructFinalPath(current_node);
+            m_Model.path = ConstructFinalPath(end_node);
             return;
-        } else {
-            AddNeighbors(current_node);
         }
+        AddNeighbors(current_node);
     }
 }
